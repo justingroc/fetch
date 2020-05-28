@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Title of the document</title>
+
+<style type="text/css">
+
+body {
+
+	margin-left: auto;
+	margin-right: auto;
+	width: 960px;
+	text-align: left;
+	padding: 40px 0 0 0;
+	background-color: #000000;
+
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+	.btn:hover {
+
+		color: #cccccc!important;
+
+	}
+
+}
+
+@media only screen and (max-width: 598px) {
+
+	body {
+
+		width: 100%!important;
+		max-width: 598px!important;
+		text-align: center!important;
+
+	}
+
+	.divMobile {
+		
+		display: block!important;
+		margin: 0 0 0 0!important;
+		
+	}
+
+}
+
+</style>
+
+<script type="text/javascript">
+
+// Storing our base URL
+const baseUrl = 'https://the-backdropper.d3d4e2vqx5acnl.amplifyapp.com';
+
+// Creates a 300 x 150 div, with our images as bg images to at least show all in the same dimensions
+function createBgImg(bgImgSrc){
+
+	let div = document.createElement('div');
+	div.setAttribute('style', 'width: 300px; height: 150px; background-image: url(' + baseUrl + bgImgSrc + '); background-size: cover; background-position: center center; display: inline-block; margin: 0 20px 20px 0;');
+	div.setAttribute('class', 'divMobile');
+	let a = document.createElement('a');
+	a.setAttribute('href', baseUrl + bgImgSrc);
+	a.setAttribute('target', '_blank');
+	a.appendChild(div);
+	return a;
+}
+
+// Our randomizer/shuffle function
+function shuffle(arr) {
+
+	let i = arr.length,
+				randomImgObj,
+				randomInt;
+
+	// While there remains array values
+	while (i > 0){
+
+		// Pick a random randomInt, or random integer
+		let randomInt = Math.floor(Math.random() * i);
+		// Decrease the integer by 1 to make sure we get the best idea for the amount of values left in the array
+		i--;
+		// Swap the last value with random integer
+		randomImgObj = arr[i];
+		arr[i] = arr[randomInt];
+		arr[randomInt] = randomImgObj;
+
+	}
+
+	return arr;
+
+}
+
+const backdropperRequest = new Request('https://the-backdropper.d3d4e2vqx5acnl.amplifyapp.com/data/images.json', {
+
+	method: 'GET',
+	cache: 'default',
+
+});
+				
+fetch(backdropperRequest)
+	.then(response => {
+		return response.json();
+	})
+	.then(data => {
+
+		// Storing div classes into variables
+		const container = document.querySelector('.container');
+		const container2 = document.querySelector('.container2');
+		const container3 = document.querySelector('.container3');
+		const container4 = document.querySelector('.container4');
+
+		// PART 1
+		// Putting our JSON data into an array
+		let imgObj = new Array(data.images);
+		// Console logging our array
+		console.log(imgObj[0]);
+
+		// PART 2A
+		// Storing image #1 url into a variable
+		let imgOne = imgObj[0][0].url;
+		// Appending, to div.container, Image #1
+		container.appendChild(createBgImg(imgOne));
+
+		// PART 2B
+		// Storing our shuffled array into a variable	
+		let shuffleImgObj = shuffle(data.images);
+		// Creating a div element, and storing it into a variable
+		let div = document.createElement('div');
+		// Going to grab our first 5 images in our shuffled array
+		shuffleImgObj.forEach((item, index) => {
+			if (index < 5){
+				div.appendChild(createBgImg(item.url));
+			}
+		});
+		// Appending, to div.container2, our first 5 images in our shuffled array
+		container2.appendChild(div);
+
+		// PART 3
+		// Creates a button element
+		let button = document.createElement('button');
+		// Labels our CTA
+		button.innerHTML = 'Generate a random image';
+		// Button styles
+		button.setAttribute('style', 'background-color: #ff0000; color: #ffffff; margin: 0 0 20px 0; font-size:16px; border-radius: 4px; border: 1px #ff0000 solid; padding: 10px 20px;');
+		// Button class
+		button.setAttribute('class', 'btn');
+		// Appending, to div.container3, our button
+		container3.appendChild(button);
+		// Our button onclick function
+		button.onclick = function myFunction(){
+			// Our Image object is randomized or shuffled		
+			let shuffleImgObj = shuffle(data.images);
+			// Image urls for randomized images in spots 1 through 5
+			let random1 = shuffleImgObj[0].url;
+			// Clear div.container4 content, for when the button is clicked more than once
+			container4.innerHTML = '';
+			// Appending, to div.container4, a random image on button-click
+			container4.appendChild(createBgImg(random1));
+		}
+		
+	});
+
+</script>
+
+</head>
+
+<body>
+
+	<!--Image 1-->
+	<div class="container"></div>
+
+	<!--5 Random Images-->
+	<div class="container2"></div>
+
+	<!--Button-->
+	<div class="container3"></div>
+
+	<!--Button-generated random image-->
+	<div class="container4"></div>
+
+<!--
+
+S2020
+Challenge #3 | feed challenge
+Points: 100
+*this challenge will be broken into different sections, each section will be scored individually, max score is 100:
+1. Fetch ( 30 points ) => use Fetch to pull down information from JSON file and create array from data. 
+2. Image ( 45 points ) => 
+    a. get the first image and append to DOM
+    b. Randomize data and append 5 images.
+3. Button ( 25 points ) => 
+    a. Create a button, onclick randomly get an image.
+    b. append image to DOM
+ 
+Acceptance Criteria:
+Successful end point call.
+Successfully randomize array of images and append to DOM.
+Testing JSON file:
+https://the-backdropper.d3d4e2vqx5acnl.amplifyapp.com/data/images.json
+Will be testing on:
+Modern browsers not IE11.
+Desktop
+Mobile
+Tablet
+
+here are some links to provide some help for challenge:
+https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+
+-->
+
+</body>
+
+</html>
